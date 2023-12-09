@@ -1,0 +1,164 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "formbricks.fullname" . }}
+  labels:
+    {{- include "formbricks.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "formbricks.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "formbricks.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "formbricks.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          env:
+            - name: ENCRYPTION_KEY
+              value: "{{ .Values.formbricks.encryption_key }}"
+            - name: WEBAPP_URL
+              value: "{{ .Values.formbricks.webapp_url }}"
+            - name: DATABASE_URL
+              value: "{{ .Values.formbricks.database_url }}"
+            - name: NEXTAUTH_SECRET
+              value: "{{ .Values.formbricks.nextauth_secret }}"
+            - name: NEXTAUTH_URL
+              value: "{{ .Values.formbricks.nextauth_url }}"
+            {{- if .Values.formbricks.privacy_url }}
+            - name: PRIVACY_URL
+              value: "{{ .Values.formbricks.privacy_url }}"
+            {{- end }}
+            {{- if .Values.formbricks.terms_url }}
+            - name: TERMS_URL
+              value: "{{ .Values.formbricks.terms_url }}"
+            {{- end }}
+            {{- if .Values.formbricks.imprint_url }}
+            - name: IMPRINT_URL
+              value: "{{ .Values.formbricks.imprint_url }}"
+            {{- end }}
+            - name: SIGNUP_DISABLED
+              value: "{{ .Values.formbricks.signup_disabled }}"
+            - name: PASSWORD_RESET_DISABLED
+              value: "{{ .Values.formbricks.password_reset_disabled }}"
+            - name: EMAIL_VERIFICATION_DISABLED
+              value: "{{ .Values.formbricks.email_verification_disabled }}"
+            - name: INVITE_DISABLED
+              value: "{{ .Values.formbricks.invite_disabled }}"
+            - name: MAIL_FROM
+              value: "{{ .Values.formbricks.mail_from }}"
+            - name: SMTP_HOST
+              value: "{{ .Values.formbricks.smtp_host }}"
+            - name: SMTP_PORT
+              value: "{{ .Values.formbricks.smtp_port }}"
+            - name: SMTP_USER
+              value: "{{ .Values.formbricks.smtp_user }}"
+            - name: SMTP_PASSWORD
+              value: "{{ .Values.formbricks.smtp_password }}"
+            - name: SMTP_SECURE_ENABLED
+              value: "{{ .Values.formbricks.smtp_secure_enabled }}"
+            - name: GITHUB_AUTH_ENABLED
+              value: "{{ .Values.formbricks.github_auth_enabled }}"
+            - name: GOOGLE_AUTH_ENABLED
+              value: "{{ .Values.formbricks.google_auth_enabled }}"
+            - name: GITHUB_ID
+              value: "{{ .Values.formbricks.github_id }}"
+            - name: GITHUB_SECRET
+              value: "{{ .Values.formbricks.github_secret }}"
+            - name: GOOGLE_CLIENT_ID
+              value: "{{ .Values.formbricks.google_client_id }}"
+            - name: GOOGLE_CLIENT_SECRET
+              value: "{{ .Values.formbricks.google_client_secret }}"
+            {{- if .Values.formbricks.cron_secret }}
+            - name: CRON_SECRET
+              value: "{{ .Values.formbricks.cron_secret }}"
+            {{- end }}
+            {{- if .Values.formbricks.stripe_secret_key }}
+            - name: STRIPE_SECRET_KEY
+              value: "{{ .Values.formbricks.stripe_secret_key }}"
+            {{- end }}
+            {{- if .Values.formbricks.stripe_webhook_secret }}
+            - name: STRIPE_WEBHOOK_SECRET
+              value: "{{ .Values.formbricks.stripe_webhook_secret }}"
+            {{- end }}
+            - name: TELEMETRY_DISABLED
+              value: "{{ .Values.formbricks.telemetry_disabled }}"
+            {{- if .Values.formbricks.short_url_base }}
+            - name: SHORT_URL_BASE
+              value: "{{ .Values.formbricks.short_url_base }}"
+            {{- end }}
+            - name: DEFAULT_BRAND_COLOR
+              value: "{{ .Values.formbricks.default_brand_color }}"
+            {{- if .Values.formbricks.short_url_base }}
+            - name: S3_ACCESS_KEY
+              value: "{{ .Values.formbricks.s3_access_key }}"
+            {{- end }}
+            {{- if .Values.formbricks.s3_secret_key }}
+            - name: S3_SECRET_KEY
+              value: "{{ .Values.formbricks.s3_secret_key }}"
+            {{- end }}
+            {{- if .Values.formbricks.s3_region }}
+            - name: S3_REGION 
+              value: "{{ .Values.formbricks.s3_region }}"
+            {{- end }}
+            {{- if .Values.formbricks.s3_bucket_name }}
+            - name: S3_BUCKET_NAME
+              value: "{{ .Values.formbricks.s3_bucket_name }}"
+            {{- end }}
+
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - mountPath: /apps/web/uploads
+              name: formbricks-uploads
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        - name: formbricks-uploads
+          persistentVolumeClaim:
+            claimName: {{ include "formbricks.fullname" . }}-pvc
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

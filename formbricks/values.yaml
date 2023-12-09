@@ -1,0 +1,136 @@
+# Default values for formbricks.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# see: https://formbricks.com/docs/self-hosting/docker#important-run-time-variables
+formbricks: 
+  encryption_key: ""                                               # REQUIRED: openssl rand -hex 32
+  webapp_url: http://localhost:3000                                # REQUIRED
+  database_url: "postgresql://postgres:postgres@postgres:5432/formbricks?schema=public"  # REQUIRED
+  nextauth_secret: ""                                              # REQUIRED: openssl rand -hex 32
+  nextauth_url: "http://localhost:3000"                            # REQUIRED
+  # NOTE: all settings below are OPTIONAL
+  privacy_url: ""
+  terms_url: ""
+  imprint_url: ""
+  signup_disabled: 0
+  password_reset_disabled: 0
+  email_verification_disabled: 0
+  invite_disabled: 0
+  # OPTIONAL email settings
+  mail_from: ""
+  smtp_host: ""
+  smtp_port: ""
+  smtp_user: ""
+  smtp_password: ""
+  smtp_secure_enabled: 0
+  # OPTIONAL Oauth2 settings
+  github_auth_enabled: 0
+  google_auth_enabled: 0
+  github_id: ""
+  github_secret: ""
+  google_client_id: ""
+  google_client_secret: ""
+  # OPTIONAL additional settings
+  cron_secret: ""
+  stripe_secret_key: ""
+  stripe_webhook_secret: ""
+  telemetry_disabled: 1
+  short_url_base: ""
+  default_brand_color: #64748b
+  # OPTIONAL undocumented (as of v1.3.5) S3 settings
+  # NOTE: you should be able to disable persistence below if you set these
+  s3_access_key: ""
+  s3_secret_key: ""
+  s3_region: ""
+  s3_bucket_name: ""
+
+replicaCount: 1  # WARNING: multiple replics will only work if "uploads" is a shared filesystem
+
+image:
+  repository: formbricks/formbricks
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# Persistence is required for storing user uploads
+# WARNING: you MUST use a ReadWriteMany volume (such as NFS/EFS) if you intend to run more than one replica.
+# NOTE: you may be able to disable persistence here if you configure S3 above.
+persistence:
+  enabled: true
+  storageClassName: ""
+  annotations: {}
+  size: 10Gi
+  accessModes:
+    - ReadWriteOnce
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
