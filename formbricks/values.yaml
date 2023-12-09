@@ -93,7 +93,19 @@ ingress:
     - host: chart-example.local
       paths:
         - path: /
-          pathType: ImplementationSpecific
+          pathType: Prefix
+      # NOTE: if you don't want to expose the UI to the internet, you can
+      #       remove the above path and uncomment the following paths:
+      # - path: /s/
+      #   pathType: Prefix
+      # - path: /_next/
+      #   pathType: Prefix
+      # - path: /api/v1/client/displays
+      #   pathType: Prefix
+      # - path: /api/v1/client/responses
+      #   pathType: Exact
+      # - path: /favicon.ico
+      #   pathType: Exact
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
