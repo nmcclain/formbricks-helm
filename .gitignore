@@ -1,3 +1,4 @@
 formbricks-*.tgz
 env
 .env
+dev

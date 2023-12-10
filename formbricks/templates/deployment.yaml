@@ -46,14 +46,23 @@ spec:
               path: /
               port: http
           env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.databaseUrlExistingSecret.name }}
+                  key: {{ .Values.formbricks.databaseUrlExistingSecret.key }}
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.nextauthSecretExistingSecret.name }}
+                  key: {{ .Values.formbricks.nextauthSecretExistingSecret.key }}
             - name: ENCRYPTION_KEY
-              value: "{{ .Values.formbricks.encryption_key }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.encryptionKeyExistingSecret.name }}
+                  key: {{ .Values.formbricks.encryptionKeyExistingSecret.key }}
             - name: WEBAPP_URL
               value: "{{ .Values.formbricks.webapp_url }}"
-            - name: DATABASE_URL
-              value: "{{ .Values.formbricks.database_url }}"
-            - name: NEXTAUTH_SECRET
-              value: "{{ .Values.formbricks.nextauth_secret }}"
             - name: NEXTAUTH_URL
               value: "{{ .Values.formbricks.nextauth_url }}"
             {{- if .Values.formbricks.privacy_url }}
@@ -84,8 +93,13 @@ spec:
               value: "{{ .Values.formbricks.smtp_port }}"
             - name: SMTP_USER
               value: "{{ .Values.formbricks.smtp_user }}"
+            {{- if .Values.formbricks.smtpPasswordExistingSecret.name }}
             - name: SMTP_PASSWORD
-              value: "{{ .Values.formbricks.smtp_password }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.smtpPasswordExistingSecret.name }}
+                  key: {{ .Values.formbricks.smtpPasswordExistingSecret.key }}
+            {{- end }}
             - name: SMTP_SECURE_ENABLED
               value: "{{ .Values.formbricks.smtp_secure_enabled }}"
             - name: GITHUB_AUTH_ENABLED
@@ -94,23 +108,42 @@ spec:
               value: "{{ .Values.formbricks.google_auth_enabled }}"
             - name: GITHUB_ID
               value: "{{ .Values.formbricks.github_id }}"
+            {{- if .Values.formbricks.githubSecretExistingSecret.name }}
             - name: GITHUB_SECRET
-              value: "{{ .Values.formbricks.github_secret }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.githubSecretExistingSecret.name }}
+                  key: {{ .Values.formbricks.githubSecretExistingSecret.key }}
+            {{- end }}
             - name: GOOGLE_CLIENT_ID
               value: "{{ .Values.formbricks.google_client_id }}"
+            {{- if .Values.formbricks.googleClientSecretExistingSecret.name }}
             - name: GOOGLE_CLIENT_SECRET
-              value: "{{ .Values.formbricks.google_client_secret }}"
-            {{- if .Values.formbricks.cron_secret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.googleClientSecretExistingSecret.name }}
+                  key: {{ .Values.formbricks.googleClientSecretExistingSecret.key }}
+            {{- end }}
+            {{- if .Values.formbricks.cronSecretExistingSecret.name }}
             - name: CRON_SECRET
-              value: "{{ .Values.formbricks.cron_secret }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.cronSecretExistingSecret.name }}
+                  key: {{ .Values.formbricks.cronSecretExistingSecret.key }}
             {{- end }}
-            {{- if .Values.formbricks.stripe_secret_key }}
+            {{- if .Values.formbricks.stripeSecretKeyExistingSecret.name }}
             - name: STRIPE_SECRET_KEY
-              value: "{{ .Values.formbricks.stripe_secret_key }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.stripeSecretKeyExistingSecret.name }}
+                  key: {{ .Values.formbricks.stripeSecretKeyExistingSecret.key }}
             {{- end }}
-            {{- if .Values.formbricks.stripe_webhook_secret }}
+            {{- if .Values.formbricks.stripeWebhookSecretExistingSecret.name }}
             - name: STRIPE_WEBHOOK_SECRET
-              value: "{{ .Values.formbricks.stripe_webhook_secret }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.stripeWebhookSecretExistingSecret.name }}
+                  key: {{ .Values.formbricks.stripeWebhookSecretExistingSecret.key }}
             {{- end }}
             - name: TELEMETRY_DISABLED
               value: "{{ .Values.formbricks.telemetry_disabled }}"
@@ -120,13 +153,19 @@ spec:
             {{- end }}
             - name: DEFAULT_BRAND_COLOR
               value: "{{ .Values.formbricks.default_brand_color }}"
-            {{- if .Values.formbricks.short_url_base }}
+            {{- if .Values.formbricks.s3AccessKeyExistingSecret.name }}
             - name: S3_ACCESS_KEY
-              value: "{{ .Values.formbricks.s3_access_key }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.s3AccessKeyExistingSecret.name }}
+                  key: {{ .Values.formbricks.s3AccessKeyExistingSecret.key }}
             {{- end }}
-            {{- if .Values.formbricks.s3_secret_key }}
+            {{- if .Values.formbricks.s3SecretKeyExistingSecret.name }}
             - name: S3_SECRET_KEY
-              value: "{{ .Values.formbricks.s3_secret_key }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.formbricks.s3SecretKeyExistingSecret.name }}
+                  key: {{ .Values.formbricks.s3SecretKeyExistingSecret.key }}
             {{- end }}
             {{- if .Values.formbricks.s3_region }}
             - name: S3_REGION 

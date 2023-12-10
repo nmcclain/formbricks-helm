@@ -5,6 +5,8 @@ This is a Helm chart for deploying Formbricks on Kubernetes.
 
 The easiest way to use Formbricks is their hosted service, with a generous free tier at [formbricks.com](https://formbricks.com/).
 
+Source for this Helm Chart is located at: https://github.com/nmcclain/formbricks-helm
+
 ### Formbricks Features
 
 - 📲 Create **in-product surveys** with our no-code editor with multiple question types.
@@ -25,19 +27,14 @@ The easiest way to use Formbricks is their hosted service, with a generous free 
 - 🔒 [Auth.js](https://authjs.dev/)
 - 🧘‍♂️ [Zod](https://zod.dev/)
 
-## Install Chart
-
-```
-helm upgrade --install oci://ghcr.io/nmcclain/formbricks/formbricks --version 0.1.0
-```
-
-Source for this Helm Chart is located at: https://github.com/nmcclain/formbricks-helm
+## Install Formbricks
 
 ## Requirements
 Before you start, ensure you have the following dependencies ready and working:
 
 * Helm 3
-* PostgreSQL Database
+* Existing PostgreSQL database
+* Existing k8s secret(s) contaning nextauth secret, formbricks encryption key, and PostgreSQL connection string.
 * Shared Filesystem for "uploads" if using multiple replicas
 * Formbricks specific Helm values
 
@@ -45,14 +42,37 @@ At a minimum, you have to set the following in `values.yaml`:
 
 ```
 formbricks:
-  encryption_key: ""                     # REQUIRED: openssl rand -hex 32
-  nextauth_secret: ""                    # REQUIRED: openssl rand -hex 32
-  webapp_url: http://localhost:3000      # REQUIRED
-  nextauth_url: "http://localhost:3000"  # REQUIRED
-  database_url: "postgresql://postgres:postgres@postgres:5432/formbricks?schema=public"  # REQUIRED
+  webapp_url: http://localhost:3000
+  nextauth_url: http://localhost:3000
+  databaseUrlExistingSecret:
+    name: formbricks-secrets
+    key: database_url
+  nextauthSecretExistingSecret:
+    name: formbricks-secrets
+    key: nextauth_secret
+  encryptionKeyExistingSecret:
+    name: formbricks-secrets
+    key: encryption_key
 ```
 
-Configuration documentation can be found here: https://formbricks.com/docs/self-hosting/docker#important-run-time-variables
+All options are defined in the `values.yaml` file. Formbricks configuration documentation can be found here: https://formbricks.com/docs/self-hosting/docker#important-run-time-variables
+
+### Create formbricks secret
+* Create `formbricks` namespace: `kubectl create ns formbricks`
+* Update `CHANGE_ME`, postgres user/host/database, and execute the following command:
+
+```
+kubectl create secret -n formbricks generic formbricks-secrets \
+	--from-literal=database_url='postgresql://formbricks:CHANGE_ME@postgres:5432/formbricks?schema=public' \
+	--from-literal=nextauth_secret="`openssl rand -hex 32`" \
+	--from-literal=encryption_key="`openssl rand -hex 32`"
+```
+
+### Install Chart
+
+```
+helm upgrade --install oci://ghcr.io/nmcclain/formbricks/formbricks --version 0.1.1
+```
 
 ## Releasing this Chart
 You need to set `$GH_PAT` to a GitHub Personal Access Token with `read:packages`, `write:packages`, and `delete:packages` permission scopes.  Also set `$GH_USERNAME` to your GitHub user.
