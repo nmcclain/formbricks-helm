@@ -71,7 +71,7 @@ kubectl create secret -n formbricks generic formbricks-secrets \
 ### Install Chart
 
 ```
-helm upgrade --install -n formbricks formbricks oci://ghcr.io/nmcclain/formbricks/formbricks --version 0.1.3
+helm upgrade --install -n formbricks formbricks oci://ghcr.io/nmcclain/formbricks/formbricks --version 0.1.4
 ```
 
 ## Releasing this Chart
