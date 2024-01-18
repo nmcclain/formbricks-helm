@@ -44,22 +44,13 @@ At a minimum, you have to set the following in `values.yaml`:
 formbricks:
   webapp_url: http://localhost:3000
   nextauth_url: http://localhost:3000
-  databaseUrlExistingSecret:
-    name: formbricks-secrets
-    key: database_url
-  nextauthSecretExistingSecret:
-    name: formbricks-secrets
-    key: nextauth_secret
-  encryptionKeyExistingSecret:
-    name: formbricks-secrets
-    key: encryption_key
 ```
 
 All options are defined in the `values.yaml` file. Formbricks configuration documentation can be found here: https://formbricks.com/docs/self-hosting/docker#important-run-time-variables
 
 ### Create formbricks secret
 * Create `formbricks` namespace: `kubectl create ns formbricks`
-* Update `CHANGE_ME`, postgres user/host/database, and execute the following command:
+* Execute the following command after updating the Postgres connection string:
 
 ```
 kubectl create secret -n formbricks generic formbricks-secrets \
