@@ -69,11 +69,17 @@ helm upgrade --install -n formbricks formbricks oci://ghcr.io/nmcclain/formbrick
 You need to set `$GH_PAT` to a GitHub Personal Access Token with `read:packages`, `write:packages`, and `delete:packages` permission scopes.  Also set `$GH_USERNAME` to your GitHub user.
 
 ```
+* Update formbricks/chart.yaml and README.md
 echo $GH_PAT | docker login ghcr.io -u $GH_USERNAME --password-stdin
 echo $GH_PAT | helm registry login ghcr.io -u $GH_USERNAME --password-stdin
 helm package formbricks
 export CHART_VERSION=$(grep 'version:' ./formbricks/Chart.yaml | tail -n1 | awk '{ print $2}')
+git add formbricks/chart.yaml README.md
+git commit -m "formbricks version ${CHART_VERSION}"
+git push
 helm push formbricks-${CHART_VERSION}.tgz oci://ghcr.io/$GH_USERNAME/formbricks
+git tag ${CHART_VERSION}
+git push origin ${CHART_VERSION}
 ```
 
 ## Support
