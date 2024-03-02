@@ -42,8 +42,8 @@ At a minimum, you have to set the following in `values.yaml`:
 
 ```
 formbricks:
-  webapp_url: http://localhost:3000
-  nextauth_url: http://localhost:3000
+  webappUrl: http://localhost:3000
+  nextauthUrl: http://localhost:3000
 ```
 
 All options are defined in the [values.yaml](formbricks/values.yaml) file. Formbricks configuration documentation can be found here: https://formbricks.com/docs/self-hosting/docker#important-run-time-variables
