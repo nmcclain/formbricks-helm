@@ -46,7 +46,7 @@ formbricks:
   nextauth_url: http://localhost:3000
 ```
 
-All options are defined in the `values.yaml` file. Formbricks configuration documentation can be found here: https://formbricks.com/docs/self-hosting/docker#important-run-time-variables
+All options are defined in the [values.yaml](formbricks/values.yaml) file. Formbricks configuration documentation can be found here: https://formbricks.com/docs/self-hosting/docker#important-run-time-variables
 
 ### Create formbricks secret
 * Create `formbricks` namespace: `kubectl create ns formbricks`
