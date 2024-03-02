@@ -50,7 +50,7 @@ All options are defined in the `values.yaml` file. Formbricks configuration docu
 
 ### Create formbricks secret
 * Create `formbricks` namespace: `kubectl create ns formbricks`
-* Execute the following command after updating the Postgres connection string:
+* Set your Postgres connection string, then execute the following command:
 
 ```
 kubectl create secret -n formbricks generic formbricks-secrets \
@@ -62,7 +62,7 @@ kubectl create secret -n formbricks generic formbricks-secrets \
 ### Install Chart
 
 ```
-helm upgrade --install -n formbricks formbricks oci://ghcr.io/nmcclain/formbricks/formbricks --version 0.1.6
+helm upgrade --install -n formbricks formbricks oci://ghcr.io/nmcclain/formbricks/formbricks --version 0.1.7
 ```
 
 ## Releasing this Chart
