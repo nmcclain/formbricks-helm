@@ -66,7 +66,10 @@ spec:
                   name: {{ .Values.formbricks.encryptionKey.existingSecret.name }}
                   key: {{ .Values.formbricks.encryptionKey.existingSecret.key }}
             # NOTE: all settings below are optional
-            {{- if .Values.formbricks.formbricksEncryptionKey.existingSecret.name }}
+            {{- if and
+              .Values.formbricks.formbricksEncryptionKey
+              .Values.formbricks.formbricksEncryptionKey.existingSecret
+            }}
             - name: FORMBRICKS_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
@@ -103,24 +106,34 @@ spec:
               value: "{{ .Values.formbricks.rateLimitingDisabled }}"
             - name: EMAIL_AUTH_DISABLED
               value: "{{ .Values.formbricks.emailAuthDisabled }}"
+            {{- if and .Values.formbricks.mail .Values.formbricks.mail.mailFrom }}
             - name: MAIL_FROM
               value: "{{ .Values.formbricks.mail.mailFrom }}"
+            {{- end }}
+            {{- if and .Values.formbricks.mail .Values.formbricks.mail.smtpHost }}
             - name: SMTP_HOST
               value: "{{ .Values.formbricks.mail.smtpHost }}"
+            {{- end }}
+            {{- if and .Values.formbricks.mail .Values.formbricks.mail.smtpPort }}
             - name: SMTP_PORT
               value: "{{ .Values.formbricks.mail.smtpPort }}"
+            {{- end }}
+            {{- if and .Values.formbricks.mail .Values.formbricks.mail.smtpUser }}
             - name: SMTP_USER
               value: "{{ .Values.formbricks.mail.smtpUser }}"
-            {{- if .Values.formbricks.mail.existingSecret.name }}
+            {{- end }}
+            {{- if and .Values.formbricks.mail .Values.formbricks.mail.existingSecret }}
             - name: SMTP_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.formbricks.mail.existingSecret.name }}
                   key: {{ .Values.formbricks.mail.existingSecret.smtpPassword }}
             {{- end }}
+            {{- if and .Values.formbricks.mail .Values.formbricks.mail.smtpSecureEnabled }}
             - name: SMTP_SECURE_ENABLED
               value: "{{ .Values.formbricks.mail.smtpSecureEnabled }}"
-            {{- if .Values.formbricks.github.existingSecret.name }}
+            {{- end }}
+            {{- if and .Values.formbricks.github .Values.formbricks.github.existingSecret }}
             - name: GITHUB_ID
               valueFrom:
                 secretKeyRef:
@@ -132,7 +145,7 @@ spec:
                   name: {{ .Values.formbricks.github.existingSecret.name }}
                   key: {{ .Values.formbricks.github.existingSecret.githubSecret }}
             {{- end }}
-            {{- if .Values.formbricks.google.existingSecret.name }}
+            {{- if and .Values.formbricks.google .Values.formbricks.google.existingSecret }}
             - name: GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -144,7 +157,7 @@ spec:
                   name: {{ .Values.formbricks.google.existingSecret.name }}
                   key: {{ .Values.formbricks.google.existingSecret.clientSecret }}
             {{- end }}
-            {{- if .Values.formbricks.googleSheets.existingSecret.name }}
+            {{- if and .Values.formbricks.googleSheets .Values.formbricks.googleSheets.existingSecret }}
             - name: GOOGLE_SHEETS_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -156,11 +169,11 @@ spec:
                   name: {{ .Values.formbricks.googleSheets.existingSecret.name }}
                   key: {{ .Values.formbricks.googleSheets.existingSecret.clientSecret }}
             {{- end }}
-            {{- if .Values.formbricks.googleSheets.redirectUrl }}
+            {{- if and .Values.formbricks.googleSheets .Values.formbricks.googleSheets.redirectUrl }}
             - name: GOOGLE_SHEETS_REDIRECT_URL
               value: "{{ .Values.formbricks.googleSheets.redirectUrl }}"
             {{- end }}
-            {{- if .Values.formbricks.azureAd.existingSecret.name }}
+            {{- if and .Values.formbricks.azureAd .Values.formbricks.azureAd.existingSecret }}
             - name: AZUREAD_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -177,7 +190,7 @@ spec:
                   name: {{ .Values.formbricks.azureAd.existingSecret.name }}
                   key: {{ .Values.formbricks.azureAd.existingSecret.tenantId }}
             {{- end }}
-            {{- if .Values.formbricks.oidc.existingSecret.name }}
+            {{- if and .Values.formbricks.oidc .Values.formbricks.oidc.existingSecret }}
             - name: OIDC_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -195,7 +208,7 @@ spec:
             - name: OIDC_SIGNING_ALGORITHM
               value: "{{ .Values.formbricks.oidc.signingAlgorithm }}"
             {{- end }}
-            {{- if .Values.formbricks.notion.existingSecret.name }}
+            {{- if and .Values.formbricks.notion .Values.formbricks.notion.existingSecret }}
             - name: NOTION_OAUTH_CLIENT_ID
               valueFrom:
                 secretKeyRef:
@@ -207,25 +220,23 @@ spec:
                   name: {{ .Values.formbricks.notion.existingSecret.name }}
                   key: {{ .Values.formbricks.notion.existingSecret.clientSecret }}
             {{- end }}
-            {{- if .Values.formbricks.airtable.clientId }}
+            {{- if and .Values.formbricks.airtable .Values.formbricks.airtable.clientId }}
             - name: AIRTABLE_CLIENT_ID
               value: "{{ .Values.formbricks.airtable.clientId }}"
             {{- end }}
-            {{- if .Values.formbricks.cron.existingSecret.name }}
+            {{- if and .Values.formbricks.cron .Values.formbricks.cron.existingSecret }}
             - name: CRON_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.formbricks.cron.existingSecret.name }}
                   key: {{ .Values.formbricks.cron.existingSecret.key }}
             {{- end }}
-            {{- if .Values.formbricks.stripe.existingSecret.name }}
+            {{- if and .Values.formbricks.stripe .Values.formbricks.stripe.existingSecret }}
             - name: STRIPE_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.formbricks.stripe.existingSecret.name }}
                   key: {{ .Values.formbricks.stripe.existingSecret.secretKey }}
-            {{- end }}
-            {{- if .Values.formbricks.stripe.existingSecret.name }}
             - name: STRIPE_WEBHOOK_SECRET
               valueFrom:
                 secretKeyRef:
@@ -236,11 +247,11 @@ spec:
               value: "{{ .Values.formbricks.telemetryDisabled }}"
             - name: DEBUG
               value: "{{ .Values.formbricks.debug }}"
-            {{- if .Values.formbricks.stripe.defaultTeam.id }}
+            {{- if and .Values.formbricks.defaultTeam .Values.formbricks.defaultTeam.id }}
             - name: DEFAULT_TEAM_ID
               value: "{{ .Values.formbricks.defaultTeam.id }}"
             {{- end }}
-            {{- if .Values.formbricks.stripe.defaultTeam.role }}
+            {{- if and .Values.formbricks.defaultTeam .Values.formbricks.defaultTeam.role }}
             - name: DEFAULT_TEAM_ROLE
               value: "{{ .Values.formbricks.defaultTeam.role }}"
             {{- end }}
@@ -253,6 +264,8 @@ spec:
               value: "{{ .Values.formbricks.defaultBrandColor }}"
             {{- end }}
             {{- if and 
+                .Values.formbricks.aws
+                .Values.formbricks.aws.existingSecret
                 .Values.formbricks.aws.existingSecret.name 
                 .Values.formbricks.aws.existingSecret.accessKey 
                 .Values.formbricks.aws.existingSecret.secretKey 
@@ -269,6 +282,9 @@ spec:
                   key: {{ .Values.formbricks.aws.existingSecret.secretKey }}
             {{- end }}
             {{- if and 
+                .Values.formbricks.aws
+                .Values.formbricks.aws.s3
+                .Values.formbricks.aws.s3.existingSecret
                 .Values.formbricks.aws.s3.existingSecret.name 
                 .Values.formbricks.aws.s3.existingSecret.accessKey 
                 .Values.formbricks.aws.s3.existingSecret.secretKey 
@@ -284,15 +300,15 @@ spec:
                   name: {{ .Values.formbricks.aws.s3.existingSecret.name }}
                   key: {{ .Values.formbricks.aws.s3.existingSecret.secretKey }}
             {{- end }}
-            {{- if .Values.formbricks.aws.s3.region }}
+            {{- if and .Values.formbricks.aws .Values.formbricks.aws.s3 .Values.formbricks.aws.s3.region }}
             - name: S3_REGION 
               value: "{{ .Values.formbricks.aws.s3.region }}"
             {{- end }}
-            {{- if .Values.formbricks.aws.s3.bucketName }}
+            {{- if and .Values.formbricks.aws .Values.formbricks.aws.s3 .Values.formbricks.aws.s3.bucketName }}
             - name: S3_BUCKET_NAME
               value: "{{ .Values.formbricks.aws.s3.bucketName }}"
             {{- end }}
-            {{- if .Values.formbricks.aws.s3.endpointUrl }}
+            {{- if and .Values.formbricks.aws .Values.formbricks.aws.s3 .Values.formbricks.aws.s3.endpointUrl }}
             - name: S3_ENDPOINT_URL
               value: "{{ .Values.formbricks.aws.s3.endpointUrl }}"
             {{- end }}
@@ -308,15 +324,15 @@ spec:
             - name: NEXT_PUBLIC_FORMBRICKS_ONBOARDING_SURVEY_ID
               value: "{{ .Values.formbricks.onboardingSurveyId }}"
             {{- end }}
-            {{- if .Values.formbricks.posthog.apiHost }}
+            {{- if and .Values.formbricks.posthog .Values.formbricks.posthog.apiHost }}
             - name: NEXT_PUBLIC_POSTHOG_API_HOST
               value: "{{ .Values.formbricks.posthog.apiHost }}"
             {{- end }}
-            {{- if .Values.formbricks.posthog.apiKey }}
+            {{- if and .Values.formbricks.posthog .Values.formbricks.posthog.apiKey }}
             - name: NEXT_PUBLIC_POSTHOG_API_KEY
               value: "{{ .Values.formbricks.posthog.apiKey }}"
             {{- end }}
-            {{- if .Values.formbricks.customerIo.existingSecret.name }}
+            {{- if and .Values.formbricks.customerIo .Values.formbricks.customerIo.existingSecret }}
             - name: CUSTOMER_IO_SITE_ID
               valueFrom:
                 secretKeyRef:
