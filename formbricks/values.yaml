@@ -39,8 +39,8 @@ formbricks:
   #   smtpSecureEnabled: 0
   #   smtpUser: ""
   #   existingSecret:
+  #     name: ""
   #     key: ""
-  #     smtpPassword: ""
 
   ## OPTIONAL auth settings
   # formbricksEncryptionKey:

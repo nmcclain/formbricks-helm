@@ -127,7 +127,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.formbricks.mail.existingSecret.name }}
-                  key: {{ .Values.formbricks.mail.existingSecret.smtpPassword }}
+                  key: {{ .Values.formbricks.mail.existingSecret.key }}
             {{- end }}
             {{- if and .Values.formbricks.mail .Values.formbricks.mail.smtpSecureEnabled }}
             - name: SMTP_SECURE_ENABLED
