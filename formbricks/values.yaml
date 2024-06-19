@@ -56,7 +56,7 @@ formbricks:
   rateLimitingDisabled: 0
   # environmentId: 0
   # onboardingSurveyId: 0
-  # defaultTeam:
+  # defaultOrg:
   #   id: 0
   #   role: ""
 

@@ -247,13 +247,13 @@ spec:
               value: "{{ .Values.formbricks.telemetryDisabled }}"
             - name: DEBUG
               value: "{{ .Values.formbricks.debug }}"
-            {{- if and .Values.formbricks.defaultTeam .Values.formbricks.defaultTeam.id }}
-            - name: DEFAULT_TEAM_ID
-              value: "{{ .Values.formbricks.defaultTeam.id }}"
+            {{- if and .Values.formbricks.defaultOrg .Values.formbricks.defaultOrg.id }}
+            - name: DEFAULT_ORGANIZATION_ID
+              value: "{{ .Values.formbricks.defaultOrg.id }}"
             {{- end }}
-            {{- if and .Values.formbricks.defaultTeam .Values.formbricks.defaultTeam.role }}
-            - name: DEFAULT_TEAM_ROLE
-              value: "{{ .Values.formbricks.defaultTeam.role }}"
+            {{- if and .Values.formbricks.defaultOrg .Values.formbricks.defaultOrg.role }}
+            - name: DEFAULT_ORGANIZATION_ROLE
+              value: "{{ .Values.formbricks.defaultOrg.role }}"
             {{- end }}
             {{- if .Values.formbricks.shortUrlBase }}
             - name: SHORT_URL_BASE

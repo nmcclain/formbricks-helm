@@ -74,7 +74,7 @@ echo $GH_PAT | docker login ghcr.io -u $GH_USERNAME --password-stdin
 echo $GH_PAT | helm registry login ghcr.io -u $GH_USERNAME --password-stdin
 helm package formbricks
 export CHART_VERSION=$(grep 'version:' ./formbricks/Chart.yaml | tail -n1 | awk '{ print $2}')
-git add formbricks/chart.yaml README.md
+git add formbricks/Chart.yaml README.md
 git commit -m "formbricks version ${CHART_VERSION}"
 git push
 helm push formbricks-${CHART_VERSION}.tgz oci://ghcr.io/$GH_USERNAME/formbricks
