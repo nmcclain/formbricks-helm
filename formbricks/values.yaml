@@ -47,11 +47,9 @@ formbricks:
   #   existingSecret:
   #     name: ""
   #     key: ""
-  signupDisabled: 0
   passwordResetDisabled: 0
   emailVerificationDisabled: 0
   inviteDisabled: 0
-  onboardingDisabled: 0
   emailAuthDisabled: 0
   rateLimitingDisabled: 0
   # environmentId: 0

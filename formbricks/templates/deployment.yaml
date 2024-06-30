@@ -92,16 +92,12 @@ spec:
             - name: ENTERPRISE_LICENSE_KEY
               value: "{{ .Values.formbricks.enterpriseLicenseKey }}"
             {{- end }}
-            - name: SIGNUP_DISABLED
-              value: "{{ .Values.formbricks.signupDisabled }}"
             - name: PASSWORD_RESET_DISABLED
               value: "{{ .Values.formbricks.passwordResetDisabled }}"
             - name: EMAIL_VERIFICATION_DISABLED
               value: "{{ .Values.formbricks.emailVerificationDisabled }}"
             - name: INVITE_DISABLED
               value: "{{ .Values.formbricks.inviteDisabled }}"
-            - name: ONBOARDING_DISABLED
-              value: "{{ .Values.formbricks.onboardingDisabled }}"
             - name: RATE_LIMITING_DISABLED
               value: "{{ .Values.formbricks.rateLimitingDisabled }}"
             - name: EMAIL_AUTH_DISABLED
