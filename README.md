@@ -62,24 +62,26 @@ kubectl create secret -n formbricks generic formbricks-secrets \
 ### Install Chart
 
 ```
-helm upgrade --install -n formbricks formbricks oci://ghcr.io/nmcclain/formbricks/formbricks --version 2.3.0
+helm upgrade --install -n formbricks formbricks oci://ghcr.io/nmcclain/formbricks/formbricks --version 2.3.2
 ```
 
 ## Releasing this Chart
 You need to set `$GH_PAT` to a GitHub Personal Access Token with `read:packages`, `write:packages`, and `delete:packages` permission scopes.  Also set `$GH_USERNAME` to your GitHub user.
 
 ```
-* Update formbricks/chart.yaml and README.md
+* Update formbricks/Chart.yaml and README.md
 echo $GH_PAT | docker login ghcr.io -u $GH_USERNAME --password-stdin
 echo $GH_PAT | helm registry login ghcr.io -u $GH_USERNAME --password-stdin
 helm package formbricks
 export CHART_VERSION=$(grep 'version:' ./formbricks/Chart.yaml | tail -n1 | awk '{ print $2}')
+git checkout -b "v${CHART_VERSION}"
 git add formbricks/Chart.yaml README.md
 git commit -m "formbricks version ${CHART_VERSION}"
 git push
-helm push formbricks-${CHART_VERSION}.tgz oci://ghcr.io/$GH_USERNAME/formbricks
 git tag ${CHART_VERSION}
 git push origin ${CHART_VERSION}
+create release in GitHub UI
+helm push formbricks-${CHART_VERSION}.tgz oci://ghcr.io/$GH_USERNAME/formbricks
 ```
 
 ## Support
