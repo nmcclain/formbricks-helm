@@ -4,6 +4,7 @@
 
 # see: https://formbricks.com/docs/self-hosting/docker#important-run-time-variables
 formbricks: 
+  # NOTE: settings in this section are REQUIRED
   webappUrl: http://localhost:3000                                # REQUIRED: Base URL of the site.
   nextauthUrl: "http://localhost:3000"                            # REQUIRED: Location of the auth server.
   # NOTE: these secrets are required and must be created before deployment
@@ -20,6 +21,10 @@ formbricks:
     existingSecret:
       name: formbricks-secrets
       key: encryption_key
+  cron:
+    existingSecret:
+      name: formbricks-secrets
+      key: cron_secret
 
   # NOTE: all settings below are OPTIONAL
 
@@ -100,10 +105,6 @@ formbricks:
   #       name: ""
   #       accessKey: ""
   #       secretKey: ""
-  # cron:
-  #   existingSecret:
-  #     name: ""
-  #     key: ""
   # customerIo:
   #   existingSecret:
   #     name: ""
