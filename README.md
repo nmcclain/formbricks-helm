@@ -34,8 +34,7 @@ Before you start, ensure you have the following dependencies ready and working:
 
 * Helm 3
 * Existing PostgreSQL database
-* Existing k8s secret(s) contaning nextauth secret, formbricks encryption key, and PostgreSQL connection string.
-* Shared Filesystem for "uploads" if using multiple replicas
+* Existing required k8s secrets - see below
 * Formbricks specific Helm values
 
 At a minimum, you have to set the following in `values.yaml`:
@@ -56,13 +55,14 @@ All options are defined in the [values.yaml](formbricks/values.yaml) file. Formb
 kubectl create secret -n formbricks generic formbricks-secrets \
 	--from-literal=database_url='postgresql://formbricks:CHANGE_ME@postgres:5432/formbricks?schema=public' \
 	--from-literal=nextauth_secret="`openssl rand -hex 32`" \
-	--from-literal=encryption_key="`openssl rand -hex 32`"
+	--from-literal=encryption_key="`openssl rand -hex 32`" \
+	--from-literal=cron_secret="`openssl rand -hex 32`"
 ```
 
 ### Install Chart
 
 ```
-helm upgrade --install -n formbricks formbricks oci://ghcr.io/nmcclain/formbricks/formbricks --version 2.3.2
+helm upgrade --install -n formbricks formbricks oci://ghcr.io/nmcclain/formbricks/formbricks --version 2.4.2
 ```
 
 ## Releasing this Chart
