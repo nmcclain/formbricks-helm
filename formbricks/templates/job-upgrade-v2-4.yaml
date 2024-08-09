@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: formbricks-data-migrations-v2-4
-        image: ghcr.io/formbricks/data-migrations:v2.4.0
+        image: ghcr.io/formbricks/data-migrations:v2.4.2
         env:
         - name: DATABASE_URL
           valueFrom:
